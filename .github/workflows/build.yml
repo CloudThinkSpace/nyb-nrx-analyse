@@ -19,10 +19,14 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 24
+                  node-version: 22 # ✅ 已修正：Node 24 尚未发布，使用最新 LTS v22
                   cache: "pnpm"
 
-            # ========== 重点修改：npm全局安装pnpm，抛弃corepack ==========
+            - name: Verify Node.js & npm
+              run: |
+                  node --version
+                  npm --version
+
             - name: Install pnpm via npm
               run: npm install -g pnpm
 
@@ -61,8 +65,13 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 24
+                  node-version: 22 # ✅ 已修正：Node 24 尚未发布，使用最新 LTS v22
                   cache: "pnpm"
+
+            - name: Verify Node.js & npm
+              run: |
+                  node --version
+                  npm --version
 
             - name: Install pnpm via npm
               run: npm install -g pnpm
