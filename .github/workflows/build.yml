@@ -19,19 +19,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 22 # ✅ 已修正：Node 24 尚未发布，使用最新 LTS v22
-                  cache: "pnpm"
-
-            - name: Verify Node.js & npm
-              run: |
-                  node --version
-                  npm --version
-
-            - name: Install pnpm via npm
-              run: npm install -g pnpm
-
-            - name: Check pnpm version
-              run: pnpm --version
+                  node-version: 20
 
             - name: Install Rust Toolchain
               uses: dtolnay/rust-toolchain@stable
@@ -43,11 +31,12 @@ jobs:
               with:
                   workspaces: src-tauri
 
+            # 全部使用 npx pnpm，不需要全局安装
             - name: Install dependencies
-              run: pnpm install
+              run: npx pnpm install
 
             - name: Build Tauri Windows x64
-              run: pnpm tauri build --target x86_64-pc-windows-msvc
+              run: npx pnpm tauri build --target x86_64-pc-windows-msvc
 
             - name: Upload Windows installers
               uses: actions/upload-artifact@v4
@@ -65,19 +54,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 22 # ✅ 已修正：Node 24 尚未发布，使用最新 LTS v22
-                  cache: "pnpm"
-
-            - name: Verify Node.js & npm
-              run: |
-                  node --version
-                  npm --version
-
-            - name: Install pnpm via npm
-              run: npm install -g pnpm
-
-            - name: Check pnpm version
-              run: pnpm --version
+                  node-version: 20
 
             - name: Install Rust Toolchain
               uses: dtolnay/rust-toolchain@stable
@@ -90,10 +67,10 @@ jobs:
                   workspaces: src-tauri
 
             - name: Install dependencies
-              run: pnpm install
+              run: npx pnpm install
 
             - name: Build Tauri macOS arm64
-              run: pnpm tauri build --target aarch64-apple-darwin
+              run: npx pnpm tauri build --target aarch64-apple-darwin
 
             - name: Upload macOS dmg
               uses: actions/upload-artifact@v4
