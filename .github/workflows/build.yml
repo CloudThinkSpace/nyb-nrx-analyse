@@ -19,13 +19,12 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
                   cache: "pnpm"
 
-            - name: Enable Corepack & activate pnpm
-              run: |
-                  corepack enable
-                  corepack prepare pnpm@latest --activate
+            # ========== 重点修改：npm全局安装pnpm，抛弃corepack ==========
+            - name: Install pnpm via npm
+              run: npm install -g pnpm
 
             - name: Check pnpm version
               run: pnpm --version
@@ -62,13 +61,11 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
                   cache: "pnpm"
 
-            - name: Enable Corepack & activate pnpm
-              run: |
-                  corepack enable
-                  corepack prepare pnpm@latest --activate
+            - name: Install pnpm via npm
+              run: npm install -g pnpm
 
             - name: Check pnpm version
               run: pnpm --version
