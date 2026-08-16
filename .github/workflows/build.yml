@@ -7,6 +7,9 @@ on:
         branches: [main]
     workflow_dispatch:
 
+env:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+
 jobs:
     build-windows:
         runs-on: windows-latest
@@ -19,30 +22,31 @@ jobs:
                   node-version: 20
                   cache: "pnpm"
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: latest
+            - name: Enable Corepack & activate pnpm
+              run: |
+                  corepack enable
+                  corepack prepare pnpm@latest --activate
 
-            - name: Install Rust
+            - name: Check pnpm version
+              run: pnpm --version
+
+            - name: Install Rust Toolchain
               uses: dtolnay/rust-toolchain@stable
               with:
                   targets: x86_64-pc-windows-msvc
 
-            # 缓存Rust编译产物，大幅提速
-            - name: Cache Rust
+            - name: Cache Rust build artifacts
               uses: Swatinem/rust-cache@v2
               with:
                   workspaces: src-tauri
 
-            - name: Install frontend dependencies
+            - name: Install dependencies
               run: pnpm install
 
-            # 核心：直接执行构建命令，不再调用tauri-action
-            - name: Build Tauri app (Windows x64)
+            - name: Build Tauri Windows x64
               run: pnpm tauri build --target x86_64-pc-windows-msvc
 
-            - name: Upload Windows installer
+            - name: Upload Windows installers
               uses: actions/upload-artifact@v4
               with:
                   name: nyb-nrx-analyse-windows
@@ -61,28 +65,31 @@ jobs:
                   node-version: 20
                   cache: "pnpm"
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: latest
+            - name: Enable Corepack & activate pnpm
+              run: |
+                  corepack enable
+                  corepack prepare pnpm@latest --activate
 
-            - name: Install Rust
+            - name: Check pnpm version
+              run: pnpm --version
+
+            - name: Install Rust Toolchain
               uses: dtolnay/rust-toolchain@stable
               with:
                   targets: aarch64-apple-darwin
 
-            - name: Cache Rust
+            - name: Cache Rust build artifacts
               uses: Swatinem/rust-cache@v2
               with:
                   workspaces: src-tauri
 
-            - name: Install frontend dependencies
+            - name: Install dependencies
               run: pnpm install
 
-            - name: Build Tauri app (macOS aarch64)
+            - name: Build Tauri macOS arm64
               run: pnpm tauri build --target aarch64-apple-darwin
 
-            - name: Upload macOS bundle
+            - name: Upload macOS dmg
               uses: actions/upload-artifact@v4
               with:
                   name: nyb-nrx-analyse-macos
