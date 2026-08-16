@@ -322,7 +322,7 @@ const columns = [
                                 :page-sizes="[5, 10, 15, 20]"
                                 show-size-picker
                                 @update:page-size="
-                                    (val) => {
+                                    (val: number) => {
                                         pageSize = val;
                                         page = 1;
                                     }
