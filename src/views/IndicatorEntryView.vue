@@ -346,7 +346,7 @@ const remainingCount = computed(() => 50 - selectedIndicators.value.length);
                         :disabled="selectedIndicators.length === 0"
                         @click="nextStep"
                     >
-                        下一步 → 计算
+                        下一步 → 权重分配
                     </n-button>
                 </div>
             </template>
