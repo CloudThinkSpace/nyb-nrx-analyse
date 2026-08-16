@@ -17,6 +17,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
+                  cache: "pnpm"
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
@@ -28,15 +29,18 @@ jobs:
               with:
                   targets: x86_64-pc-windows-msvc
 
+            # 缓存Rust编译产物，大幅提速
+            - name: Cache Rust
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: src-tauri
+
             - name: Install frontend dependencies
               run: pnpm install
 
-            - name: Build Tauri app (Windows)
-              uses: tauri-apps/tauri-action@v0
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  args: --target x86_64-pc-windows-msvc
+            # 核心：直接执行构建命令，不再调用tauri-action
+            - name: Build Tauri app (Windows x64)
+              run: pnpm tauri build --target x86_64-pc-windows-msvc
 
             - name: Upload Windows installer
               uses: actions/upload-artifact@v4
@@ -55,6 +59,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
+                  cache: "pnpm"
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
@@ -66,19 +71,19 @@ jobs:
               with:
                   targets: aarch64-apple-darwin
 
+            - name: Cache Rust
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: src-tauri
+
             - name: Install frontend dependencies
               run: pnpm install
 
-            - name: Build Tauri app (macOS)
-              uses: tauri-apps/tauri-action@v0
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  args: --target aarch64-apple-darwin
+            - name: Build Tauri app (macOS aarch64)
+              run: pnpm tauri build --target aarch64-apple-darwin
 
             - name: Upload macOS bundle
               uses: actions/upload-artifact@v4
               with:
                   name: nyb-nrx-analyse-macos
-                  path: |
-                      src-tauri/target/release/bundle/dmg/*.dmg
+                  path: src-tauri/target/release/bundle/dmg/*.dmg
