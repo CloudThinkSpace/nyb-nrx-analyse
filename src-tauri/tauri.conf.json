@@ -1,6 +1,6 @@
 {
     "$schema": "https://schema.tauri.app/config/2",
-    "productName": "nyb-nrx-analyse",
+    "productName": "区域农业评价",
     "version": "0.1.0",
     "identifier": "com.tanghy.nyb-nrx-analyse",
     "build": {
